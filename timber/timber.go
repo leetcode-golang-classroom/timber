@@ -1,21 +1,66 @@
 package timber
 
 import (
-	timber_interface "github.com/leetcode-golang-classroom/timber/timber/interface"
+	"fmt"
+
 	log "github.com/sirupsen/logrus"
+
+	timber_interface "github.com/leetcode-golang-classroom/timber/timber/interface"
 )
 
-func Print(tree timber_interface.NodeTree) {
-	doPrint(tree, node{prefix: "", isLast: true})
+type PrinterFn func(display string) (interface{}, error)
+type ResultFn func(previousResult, currentItem interface{}) (interface{}, error)
+
+var DefaultPrinterFn = func(display string) (interface{}, error) {
+	log.Print(display)
+	return display, nil
 }
 
-func doPrint(tree timber_interface.NodeTree, node node) {
-	log.Print(node.display(), tree.Display())
+var DefaultResultFn = func(previousResult, currentItem interface{}) (interface{}, error) {
+	return append(previousResult.([]string), currentItem.(string)), nil
+}
+
+type customPrinter struct {
+	printerFn PrinterFn
+	result    interface{}
+	resultFn  ResultFn
+}
+
+func NewCustomPrinter(printerFn PrinterFn, result interface{}, resultFn ResultFn) *customPrinter {
+	return &customPrinter{printerFn: printerFn, result: result, resultFn: resultFn}
+}
+
+func NewDefaultPrinter() *customPrinter {
+	return &customPrinter{
+		printerFn: DefaultPrinterFn,
+		result:    make([]string, 0),
+		resultFn:  DefaultResultFn,
+	}
+}
+func (printer *customPrinter) Print(tree timber_interface.NodeTree) (interface{}, error) {
+	if err := printer.doPrint(tree, node{prefix: "", isLast: true}); err != nil {
+		return nil, err
+	}
+	return printer.result, nil
+}
+
+func (printer *customPrinter) doPrint(tree timber_interface.NodeTree, node node) error {
+	display := fmt.Sprint(node.display(), tree.Display())
+	displayResult, errPrint := printer.printerFn(display)
+	if errPrint != nil {
+		return errPrint
+	}
+	updateResult, errResult := printer.resultFn(printer.result, displayResult)
+	if errResult != nil {
+		return errResult
+	}
+	printer.result = updateResult
 	length := len(tree.Components())
 	for idx, child := range tree.Components() {
 		isLast := idx == length-1
-		doPrint(child, node.createChildNode(isLast))
+		printer.doPrint(child, node.createChildNode(isLast))
 	}
+	return nil
 }
 
 // node

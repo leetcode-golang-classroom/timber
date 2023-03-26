@@ -9,7 +9,7 @@ func main() {
 	l0 := Leaf{label: "l0"}
 	l1 := Leaf{label: "l1"}
 	b3 := Branch{
-		label: "branch2",
+		label: "branch3",
 		components: []timber_interface.NodeTree{
 			Leaf{label: "l7"},
 		},
@@ -36,7 +36,8 @@ func main() {
 			Leaf{label: "l8"},
 		},
 	}
-	timber.Print(b0)
+	printer := timber.NewDefaultPrinter()
+	printer.Print(b0)
 }
 
 type Leaf struct {
