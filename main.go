@@ -8,12 +8,19 @@ import (
 func main() {
 	l0 := Leaf{label: "l0"}
 	l1 := Leaf{label: "l1"}
+	b3 := Branch{
+		label: "branch2",
+		components: []timber_interface.NodeTree{
+			Leaf{label: "l7"},
+		},
+	}
 	b2 := Branch{
 		label: "branch2",
 		components: []timber_interface.NodeTree{
 			Leaf{label: "l4"},
 			Leaf{label: "l5"},
 			Leaf{label: "l6"},
+			b3,
 		},
 	}
 	b1 := Branch{
@@ -26,6 +33,7 @@ func main() {
 		label: "branch0",
 		components: []timber_interface.NodeTree{
 			l0, l1, b1, b2,
+			Leaf{label: "l8"},
 		},
 	}
 	timber.Print(b0)
