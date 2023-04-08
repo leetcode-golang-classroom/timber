@@ -68,7 +68,7 @@ func TestFailure_printFnFailure(t *testing.T) {
 	// when
 	result, err := printer.Print(tree)
 	// then
-	Equal(t, "bam", err.Error())
+	Equal(t, "nope", err.Error())
 	Equal(t, nil, result)
 }
 
