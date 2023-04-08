@@ -3,3 +3,6 @@ build:
 
 run: build
 	@./bin/timber
+
+test:
+	@go test -v ./...
