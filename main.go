@@ -2,42 +2,38 @@ package main
 
 import (
 	"github.com/leetcode-golang-classroom/timber/timber"
+	timber_example "github.com/leetcode-golang-classroom/timber/timber/example"
 	timber_interface "github.com/leetcode-golang-classroom/timber/timber/interface"
 )
 
 func main() {
-	l0 := Leaf{label: "l0"}
-	l1 := Leaf{label: "l1"}
-	b3 := Branch{
-		label: "branch3",
-		components: []timber_interface.NodeTree{
-			Leaf{label: "l7"},
-		},
-	}
-	b2 := Branch{
-		label: "branch2",
-		components: []timber_interface.NodeTree{
-			Leaf{label: "l4"},
-			Leaf{label: "l5"},
-			Leaf{label: "l6"},
-			b3,
-		},
-	}
-	b1 := Branch{
-		label: "branch1",
-		components: []timber_interface.NodeTree{
-			Leaf{label: "l3"},
-		},
-	}
-	b0 := Branch{
-		label: "branch0",
-		components: []timber_interface.NodeTree{
-			l0, l1, b1, b2,
-			Leaf{label: "l8"},
+	tree := timber_example.Branch{
+		Label: "branch",
+		Items: []timber_interface.NodeTree{
+			timber_example.Leaf{
+				Label: "leaf",
+			},
+			timber_example.Branch{
+				Label: "branch",
+				Items: []timber_interface.NodeTree{
+					timber_example.Leaf{
+						Label: "leaf",
+					},
+					timber_example.Leaf{
+						Label: "leaf",
+					},
+					timber_example.Leaf{
+						Label: "leaf",
+					},
+				},
+			},
+			timber_example.Leaf{
+				Label: "leaf",
+			},
 		},
 	}
 	printer := timber.NewDefaultPrinter()
-	printer.Print(b0)
+	printer.Print(tree)
 }
 
 type Leaf struct {
